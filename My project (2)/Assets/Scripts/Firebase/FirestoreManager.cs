@@ -26,10 +26,10 @@ public class FirestoreManager : MonoBehaviour
             Debug.LogError("No User");
             return;
         }
-
+        // User Id 데이터 저장
         DocumentReference docRef =
             db.Collection("users")
-            .Document(user.UserId);
+            .Document(user.UserId); 
 
         Dictionary<string, object> playerData =
             new Dictionary<string, object>()
@@ -37,12 +37,46 @@ public class FirestoreManager : MonoBehaviour
             { "nickname", data.nickname },
             { "level", data.level },
             { "gold", data.gold },
-            { "tutorialCompleted", data.tutorialCompleted }
+            { "tutorialCompleted", data.tutorialCompleted },
+            { "inventory", data.inventory.items }
         };
 
         await docRef.SetAsync(playerData);
 
         Debug.Log("[Firestore] Save Success");
+    }
+    // 유저 닉네임 저장
+    public async void UpdateNickname(string nickname)
+    {
+        FirebaseUser user =
+            FirebaseAuth.DefaultInstance.CurrentUser;
+
+        DocumentReference docRef =
+            db.Collection("users")
+            .Document(user.UserId);
+
+        await docRef.UpdateAsync("nickname", nickname);
+
+        Debug.Log("[Firestore] Nickname Updated");
+    }
+    // 유저 골드 저장
+    public async void AddGold(int amount)
+    {
+        FirebaseUser user =
+            FirebaseAuth.DefaultInstance.CurrentUser;
+
+        PlayerDataManager.Instance.playerData.gold += amount;
+
+        int newGold =
+            PlayerDataManager.Instance.playerData.gold;
+
+        DocumentReference docRef =
+            db.Collection("users")
+            .Document(user.UserId);
+
+        await docRef.UpdateAsync("gold", newGold);
+
+        Debug.Log($"[Firestore] Gold Updated: {newGold}");
     }
 
     public async void LoadPlayerData()

@@ -395,8 +395,6 @@ UserSettings/
 !My project (2)/Assets/Scripts/**
 
 # Safety: explicitly ignore common binary/plugin folders
-My project (2)/Assets/**/Plugins/
-My project (2)/Assets/**/Plugins/**
 My project (2)/Library/
 My project (2)/Temp/
 My project (2)/Logs/
